@@ -5,18 +5,6 @@ var bodyParser = require('body-parser');
 var cors = require('cors')
 var fs = require('fs');
 
-var fileApiKey = fs.readFileSync('KEYDATA', 'utf8');
-var port = process.env.PORT || 3001;
-console.log(fileApiKey);
-
-// configure app to use bodyParser()
-// this will let us get the data from a POST
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
-app.use(cors())
-
-var router = express.Router();
-
 //pubg api constant
 const {PubgAPI, PubgAPIErrors} = require('pubg-api-redis');
 
@@ -28,6 +16,20 @@ const api = new PubgAPI({
         port: 6379,
     },
 });
+
+//read api key from KEYDATA file
+var fileApiKey = fs.readFileSync('KEYDATA', 'utf8');
+
+//set port
+var port = process.env.PORT || 3001;
+
+// configure app to use bodyParser()
+// this will let us get the data from a POST
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+app.use(cors())
+
+var router = express.Router();
 
 // middleware to use for all requests
 //router.use(function(req, res, next) {
