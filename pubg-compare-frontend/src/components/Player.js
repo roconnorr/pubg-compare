@@ -16,26 +16,19 @@ const divStyle = {
 class Player extends React.Component {
     constructor(props) {
         super(props);
-        this.state = { data: {} };
+        this.state = {
+            data: '',
+        };
         this.searchPlayer = this.searchPlayer.bind(this);
         //this.searchPlayerAsync = this.searchPlayerAsync.bind(this);
     }
 
-    /*searchPlayerAsync(name) {
-        return fetch(`http://localhost:3001/api/playername/${name}`)
-            .then((response) => response.json())
-            .then((responseJson) => {
-                return responseJson.AccountId;
-            })
-            .catch((error) => {
-                console.error(error);
-            });
-    }*/
-
     searchPlayer(heading) {
         axios.get(`http://localhost:3001/api/playername/${heading}`)
-            .then(function (response) {
-                alert(response.data.platformId);
+            .then(response => {
+                //var responseJson = JSON.parse(response.data);
+                //alert(responseJson.Avatar);
+                this.setState({ data: response.data});
             })
             .catch(function (error) {
                 alert(error);
@@ -46,8 +39,8 @@ class Player extends React.Component {
         return (
             <div style={divStyle} >
                 {this.props.name}
-                {this.state.data.AccountId}
                 < SearchBox onSubmit={this.searchPlayer} />
+                PlayerId: {this.state.data.AccountId}
             </div >
         );
     }

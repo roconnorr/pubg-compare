@@ -11,6 +11,8 @@ backend
 		/api/playername/:player_name
 		/api//steamid/:steam_id
 
+		api and client need more error handling
+
 
 frontend
 	react
@@ -26,21 +28,13 @@ frontend
 		app
 			playerlist - contains player objects
 				players - Takes json of players and compare stats
-					searchbox -2 search boxes and 1 search button
+					searchbox - search box and button
 
 			graphs
 				-displays graphs
 
-			
-
-			textbox
-				-input text
-			searchbutton
-				-execute search
-
 			contactinfo
 				-bottom right
-
 
 Data List:
 	Avatar
