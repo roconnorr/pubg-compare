@@ -1,0 +1,114 @@
+pubg stats - start with react frontend app that compares the stats of multiple pubg players given pubg name or steam id
+
+backend
+	nodejs + express
+	REST wrapper for pubg api
+	uses pubg api wrapper that caches in redis
+	possibly used in future to store stuff in a db
+	any other backend requirements
+
+	endpoints:
+		/api/playername/:player_name
+		/api//steamid/:steam_id
+
+
+frontend
+	react
+	react charts lib tbd
+	features:
+		compare x players stats
+			numbers and graphz
+		cool ui with pics
+
+	lowest player component field = red, highest = green
+
+	components
+		app
+			playerlist - contains player objects
+				players - Takes json of players and compare stats
+					searchbox -2 search boxes and 1 search button
+
+			graphs
+				-displays graphs
+
+			
+
+			textbox
+				-input text
+			searchbutton
+				-execute search
+
+			contactinfo
+				-bottom right
+
+
+Data List:
+	Avatar
+	Selected Region
+	last updated
+	playername
+
+Regions:
+	oc -> oceania
+	(list the others)
+	aggregate? ('agg' in json)
+
+Modes:
+	Solo
+	Duo
+	Squad
+
+For each mode:
+	Elo rating
+
+For each mode (ordered list starting at 0:
+	K/D Ratio
+	win %
+	Time Survived
+	Rounds Played
+	Wins
+	Win/Top 10 ratio
+	Top 10s
+	Top 10 rate
+	Losses
+	Rating
+	Best Rating
+	Damage Pg
+	Headshot kills pg
+	heals pg
+	kills pg
+	move distance pg
+	revives pg
+	road kills pg
+	team kills pg
+	time survived pg
+	top 10s pg
+	Kills
+	Assists
+	Suicides
+	Team Kills
+	Headshot Kills
+	Headshot Kill Ratio
+	Vehicle Destroys
+	Road Kills
+	Daily Kills
+	Weekly Kills
+	Round Most Kills
+	Max Kill Streaks
+	Weapons Acquired
+	Days
+	Longest Time Survived
+	Most Survival Time
+	Avg survival time
+	Win Points
+	Walk Distance
+	Ride Distance
+	Move Distance
+	Avg Walk Distance
+	Avg Ride Distance
+	Longest Kill
+	Heals
+	Revives
+	Boosts
+	Damage Dealt
+	Knock Outs
