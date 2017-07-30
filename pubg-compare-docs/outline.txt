@@ -12,6 +12,8 @@ backend
 		/api//steamid/:steam_id
 
 		api and client need more error handling
+			player not found - done
+			empty search - not done
 
 
 frontend
@@ -35,6 +37,12 @@ frontend
 
 			contactinfo
 				-bottom right
+
+			add:
+				error component (player not mound)
+
+	component rethink:
+		playerlist needs to make api calls and compare all the different player data, then pass the data down along with info on which is highest(green) or lowest(red)
 
 Data List:
 	Avatar

@@ -1,7 +1,6 @@
 import React from 'react';
 //import Binder from 'react-binding';
 import SearchBox from './SearchBox.js';
-import axios from 'axios';
 
 //import react table and style
 import ReactTable from 'react-table'
@@ -38,18 +37,8 @@ class Player extends React.Component {
             data: null,
             errorMsg: ""
         };
-        this.searchPlayer = this.searchPlayer.bind(this);
-    }
 
-    searchPlayer(heading) {
-        axios.get(`http://localhost:3001/api/playername/${heading}`)
-            .then(response => {
-                this.setState({ data: response.data });
-                this.setState({errorMsg: ""});
-            })
-            .catch(error => {
-                this.setState({errorMsg: error.response.data.message});
-            });
+        this.onSubmit = this.onSubmit.bind(this);
     }
 
     makeTableData() {
@@ -65,6 +54,10 @@ class Player extends React.Component {
         return data;
     }
 
+    onSubmit(event) {
+        this.props.handlePlayerSearchEvent(event, this.props.childId);
+    }
+
     render() {
         let table
         if (this.state.data == null) {
@@ -74,15 +67,15 @@ class Player extends React.Component {
         }
 
         let error
-        if(this.state.errorMsg == ""){
+        if (this.props.errorMsg == "") {
             error = "";
         } else {
-            error = this.state.errorMsg;
+            error = this.props.errorMsg;
         }
         return (
             <div style={divStyle} >
-                {this.props.name}
-                < SearchBox onSubmit={this.searchPlayer} />
+                {this.props.childId}
+                < SearchBox onSubmit={this.onSubmit} />
                 {error}
                 {table}
             </div >
