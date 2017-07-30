@@ -5,23 +5,23 @@ var bodyParser = require('body-parser');
 var cors = require('cors')
 var fs = require('fs');
 
-//pubg api constant
-const {PubgAPI, PubgAPIErrors} = require('pubg-api-redis');
-
-// pubg api redis cache config
-const api = new PubgAPI({
-    apikey: fileApiKey.toString(),
-    redisConfig: {
-        host: '127.0.0.1',
-        port: 6379,
-    },
-});
-
 //read api key from KEYDATA file
 var fileApiKey = fs.readFileSync('KEYDATA', 'utf8');
 
 //set port
 var port = process.env.PORT || 3001;
+
+//pubg api constant
+const {PubgAPI, PubgAPIErrors} = require('pubg-api-redis');
+
+// pubg api redis cache config
+const api = new PubgAPI({
+    apikey: fileApiKey,
+    redisConfig: {
+        host: '127.0.0.1',
+        port: 6379,
+    },
+});
 
 // configure app to use bodyParser()
 // this will let us get the data from a POST
@@ -46,6 +46,9 @@ router.route('/playername/:player_name')
         api.profile.byNickname(req.params.player_name)
             .then((data) => { 
                 res.json(data);
+            })
+            .catch(error => {
+                res.status(404).json({message: "Player not found"});
             });
     });
 

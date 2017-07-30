@@ -35,7 +35,8 @@ class Player extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            data: null
+            data: null,
+            errorMsg: ""
         };
         this.searchPlayer = this.searchPlayer.bind(this);
     }
@@ -44,9 +45,10 @@ class Player extends React.Component {
         axios.get(`http://localhost:3001/api/playername/${heading}`)
             .then(response => {
                 this.setState({ data: response.data });
+                this.setState({errorMsg: ""});
             })
-            .catch(function (error) {
-                alert(error);
+            .catch(error => {
+                this.setState({errorMsg: error.response.data.message});
             });
     }
 
@@ -62,7 +64,7 @@ class Player extends React.Component {
         ];
         return data;
     }
-    
+
     render() {
         let table
         if (this.state.data == null) {
@@ -70,10 +72,18 @@ class Player extends React.Component {
         } else {
             table = <ReactTable data={this.makeTableData()} columns={columns} />;
         }
+
+        let error
+        if(this.state.errorMsg == ""){
+            error = "";
+        } else {
+            error = this.state.errorMsg;
+        }
         return (
             <div style={divStyle} >
                 {this.props.name}
                 < SearchBox onSubmit={this.searchPlayer} />
+                {error}
                 {table}
             </div >
         );
