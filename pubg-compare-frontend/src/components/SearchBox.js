@@ -12,6 +12,7 @@ class SearchBox extends React.Component {
         };
     }
     
+    //passes form submit event to parent
     onSubmit(event) {
         event.preventDefault();
         this.props.onSubmit(this.state.input);

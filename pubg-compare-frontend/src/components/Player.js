@@ -33,41 +33,42 @@ const columns = [{
 class Player extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {
-            data: null,
-            errorMsg: ""
-        };
+        //this.state = {};
 
         this.onSubmit = this.onSubmit.bind(this);
     }
 
     makeTableData() {
-        var data = [{
-            "stat": "playerid",
-            "value": this.state.data.AccountId
-        },
-        {
-            "stat": "KD Ratio",
-            "value": this.state.data.LiveTracking[0].Value
+        var data;
+        if (this.props.dataInput !== undefined) {
+            data = [{
+                "stat": "playerid",
+                "value": this.props.dataInput.AccountId
+            },
+            {
+                "stat": "KD Ratio",
+                "value": this.props.dataInput.LiveTracking[0].Value
+            }
+            ];
         }
-        ];
         return data;
     }
 
+    //passes form submit event to parent
     onSubmit(event) {
         this.props.handlePlayerSearchEvent(event, this.props.childId);
     }
 
     render() {
         let table
-        if (this.state.data == null) {
+        if (this.props.dataInput == null) {
             table = null;
         } else {
             table = <ReactTable data={this.makeTableData()} columns={columns} />;
         }
 
         let error
-        if (this.props.errorMsg == "") {
+        if (this.props.errorMsg === "") {
             error = "";
         } else {
             error = this.props.errorMsg;
