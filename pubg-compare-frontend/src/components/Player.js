@@ -25,7 +25,41 @@ const columns = [{
     Header: 'Value',
     columns: [{
         Header: 'Value',
-        accessor: 'value'
+        accessor: 'value',
+        Cell: row => (
+            <span>
+                <span style={{
+                    color: row.value === 'relationship' ? '#ff2e00'
+                        : row.value === 'complicated' ? '#ffbf00'
+                            : '#57d500',
+                    transition: 'all .3s ease'
+                }}>
+                    &#x25cf;
+            </span> {
+                    row.value //=== 'relationship' ? 'In a relationship'
+                    //: row.value === 'complicated' ? `It's complicated`
+                    //: 'Single'
+                }
+            </span>
+        )
+    }]
+}, {
+    Header: 'Highest',
+    columns: [{
+        Header: 'High',
+        accessor: 'highest',
+        Cell: row => (
+            <span>
+                <span style={{
+                    color: row.value === true ? '#57d500'
+                        : row.value === false ? '#ff2e00'
+                            : '#57d500',
+                    transition: 'all .3s ease'
+                }}>
+                    &#x25cf;
+            </span>
+            </span>
+        )
     }]
 }]
 
@@ -36,22 +70,6 @@ class Player extends React.Component {
         //this.state = {};
 
         this.onSubmit = this.onSubmit.bind(this);
-    }
-
-    makeTableData() {
-        var data;
-        if (this.props.dataInput !== undefined) {
-            data = [{
-                "stat": "playerid",
-                "value": this.props.dataInput.AccountId
-            },
-            {
-                "stat": "KD Ratio",
-                "value": this.props.dataInput.LiveTracking[0].Value
-            }
-            ];
-        }
-        return data;
     }
 
     //passes form submit event to parent
@@ -81,6 +99,27 @@ class Player extends React.Component {
                 {table}
             </div >
         );
+    }
+    //extracts data from json for the table
+    makeTableData() {
+        var data;
+        if (this.props.dataInput !== undefined && this.props.highestInputProps[0] !== undefined) {
+            //alert(this.props.highestInputProps[0].soloElo + "asdf");
+            data = [{
+                "stat": "playerid",
+                "value": this.props.dataInput.AccountId,
+                //ternary for highest: : dataInput[i].val ? something
+                "highest": false
+            },
+            {
+                "stat": "KD Ratio",
+                "value": this.props.dataInput.LiveTracking[0].value,
+                "highest": this.props.highestInputProps[0].soloElo.data === this.props.childId ? true
+                   : false
+            }
+            ];
+        }
+        return data;
     }
 }
 
