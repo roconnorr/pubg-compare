@@ -2,6 +2,7 @@ import React from 'react';
 import Player from './Player.js';
 import axios from 'axios';
 import update from 'immutability-helper';
+import { RadioGroup, Radio } from 'react-radio-group'
 
 const liStyle = {
   float: "left"
@@ -14,12 +15,14 @@ class PlayerList extends React.Component {
       playerList: [],
       dataInputProps: [],
       highestInputProps: [],
-      errorMessages: []
+      errorMessages: [],
+      selectedValue: 'Solo'
     };
 
     this.onAddButtonClick = this.onAddButtonClick.bind(this);
     this.handlePlayerSearchEvent = this.handlePlayerSearchEvent.bind(this);
-    this.sortData = this.sortData.bind(this);
+    this.updateData = this.updateData.bind(this);
+    this.handleRadioChange = this.handleRadioChange.bind(this);
   }
 
   onAddButtonClick(event) {
@@ -34,6 +37,11 @@ class PlayerList extends React.Component {
     });
   }
 
+  handleRadioChange(value) {
+    this.setState({selectedValue: value});
+    //use .then to call the update data function
+  }
+
   handlePlayerSearchEvent(event, childId) {
     axios.get(`http://localhost:3001/api/playername/${event}`)
       .then(response => {
@@ -45,7 +53,7 @@ class PlayerList extends React.Component {
           })
         });
 
-        this.sortData();
+        this.updateData();
       })
       .catch(error => {
         //do the same with error messages
@@ -56,25 +64,19 @@ class PlayerList extends React.Component {
           })
         });
       });
-
-
-    //var obj = this.state.dataInputProps.find(function(o){ return o.LiveTracking[0].value === res; });
-    // alert(obj.AccountID);
   }
 
-  sortData() {
+  updateData() {
     if (this.state.dataInputProps !== undefined) {
       var array = this.state.dataInputProps;
       var highestArr = [];
-      //for (var i = 0; i < this.state.dataInputProps.length; i++) {
-        //Solo elo compare
-        var res = Math.max.apply(Math, array.map(function (o) { return o.LiveTracking[0].Value; }))
-        var elementPos = array.map(function (x) { return x.LiveTracking[0].Value; }).indexOf(res);
-        highestArr.push({soloElo: {data: elementPos}});
-        //alert(highestArr.toString());
 
-      //}
-      this.setState({highestInputProps: highestArr});
+      //Solo elo compare
+      var res = Math.max.apply(Math, array.map(function (o) { return o.LiveTracking[0].Value; }))
+      var elementPos = array.map(function (x) { return x.LiveTracking[0].Value; }).indexOf(res);
+      highestArr.push({ soloElo: { data: elementPos } });
+
+      this.setState({ highestInputProps: highestArr });
     }
   }
 
@@ -82,6 +84,12 @@ class PlayerList extends React.Component {
     return (
       //when the add button is clicked, call handler and make a new player object
       <div>
+        Mode:
+        <RadioGroup name="Mode" selectedValue={this.state.selectedValue} onChange={this.handleRadioChange}>
+          <Radio value="Solo" />Solo
+          <Radio value="Duo" />Duo
+          <Radio value="Squad" />Squad
+        </RadioGroup>
         <button onClick={this.onAddButtonClick}>Add input</button>
         <div>
           {this.state.playerList.map(input => {
