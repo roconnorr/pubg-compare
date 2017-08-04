@@ -7,8 +7,8 @@ import ReactTable from 'react-table'
 import 'react-table/react-table.css'
 
 const divStyle = {
-    width: 300,
-    height: 500,
+    width: 500,
+    height: 1000,
     display: "block",
     borderStyle: "solid",
     background: "#eee",
@@ -19,7 +19,7 @@ const divStyle = {
 class Player extends React.Component {
     constructor(props) {
         super(props);
-        //this.state = {};
+        this.state = {data: []};
 
         this.onSubmit = this.onSubmit.bind(this);
     }
@@ -54,10 +54,20 @@ class Player extends React.Component {
     }
     //extracts data from json for the table
     makeTableData() {
-        var data;
+        var data = [];
         if (this.props.stats !== undefined/* && this.props.highestInputProps[0] !== undefined*/) {
             //alert(this.props.highestInputProps[0].soloElo + "asdf");
-            data = [{
+
+            for (var i = 0; i < this.props.stats[0].length; i++) {
+                data[i] = {
+                    "stat": this.props.stats[0][i].label,
+                    "value": this.props.stats[0][i].value,
+                    //ternary for highest: : dataInput[i].val ? something
+                    "highest": false
+                };
+            }
+            //this.setState({data: data});
+            /*data = [{
                 "stat": "playerid",
                 "value": this.props.stats[0][0].value,
                 //ternary for highest: : dataInput[i].val ? something
@@ -70,7 +80,7 @@ class Player extends React.Component {
                 //  : false
                 "highest": true
             }
-            ];
+            ];*/
         }
         return data;
     }
@@ -94,9 +104,8 @@ class Player extends React.Component {
                                 : row.value === 'complicated' ? '#ffbf00'
                                     : '#57d500',
                             transition: 'all .3s ease'
-                        }}>
-                            &#x25cf;
-            </span> {
+                        }}> &#x25cf;
+                        </span> {
                             row.value //=== 'relationship' ? 'In a relationship'
                             //: row.value === 'complicated' ? `It's complicated`
                             //: 'Single'
@@ -116,9 +125,8 @@ class Player extends React.Component {
                                 : row.value === false ? '#ff2e00'
                                     : '#57d500',
                             transition: 'all .3s ease'
-                        }}>
-                            &#x25cf;
-            </span>
+                        }}> &#x25cf;
+                        </span>
                     </span>
                 )
             }]

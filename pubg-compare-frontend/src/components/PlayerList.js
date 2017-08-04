@@ -18,7 +18,6 @@ class PlayerList extends React.Component {
       highestInputProps: [],
       errorMessages: [],
       selectedMode: 'solo',
-      asdf: [],
       statDisplayProps: []
     };
 
@@ -97,6 +96,7 @@ class PlayerList extends React.Component {
             selectedStats[i] = jp.query(aggregateRegion, "$..[?(@.Match=='squad')].Stats");
             break;
           default:
+            alert("unknown mode");
             break;
         }
       }
@@ -112,8 +112,6 @@ class PlayerList extends React.Component {
       this.setState({ statDisplayProps: selectedStats });
     }
   }
-
-
 
   render() {
     return (
