@@ -55,19 +55,20 @@ class Player extends React.Component {
     //extracts data from json for the table
     makeTableData() {
         var data;
-        if (this.props.dataInput !== undefined && this.props.highestInputProps[0] !== undefined) {
+        if (this.props.stats !== undefined/* && this.props.highestInputProps[0] !== undefined*/) {
             //alert(this.props.highestInputProps[0].soloElo + "asdf");
             data = [{
                 "stat": "playerid",
-                "value": this.props.dataInput.AccountId,
+                "value": this.props.stats[0][0].value,
                 //ternary for highest: : dataInput[i].val ? something
                 "highest": false
             },
             {
                 "stat": "KD Ratio",
-                "value": this.props.dataInput.LiveTracking[0].value,
-                "highest": this.props.highestInputProps[0].soloElo.data === this.props.childId ? true
-                    : false
+                "value": this.props.stats[0][0].value,
+                //"highest": this.props.highestInputProps[0].kda.data === this.props.childId ? true
+                //  : false
+                "highest": true
             }
             ];
         }
@@ -75,59 +76,54 @@ class Player extends React.Component {
     }
 
     makeColumnData() {
-        if (this.props.highestInputProps[0] !== undefined) {
-            const columns = [{
+        var columns = [{
+            Header: 'Stat',
+            columns: [{
                 Header: 'Stat',
-                columns: [{
-                    Header: 'Stat',
-                    accessor: 'stat'
-                }]
-            }, {
+                accessor: 'stat'
+            }]
+        }, {
+            Header: 'Value',
+            columns: [{
                 Header: 'Value',
-                columns: [{
-                    Header: 'Value',
-                    accessor: 'value',
-                    Cell: row => (
-                        <span>
-                            <span style={{
-                                color: row.value === 'relationship' ? '#ff2e00'
-                                    : row.value === 'complicated' ? '#ffbf00'
-                                        : '#57d500',
-                                transition: 'all .3s ease'
-                            }}>
-                                &#x25cf;
+                accessor: 'value',
+                Cell: row => (
+                    <span>
+                        <span style={{
+                            color: row.value === 'relationship' ? '#ff2e00'
+                                : row.value === 'complicated' ? '#ffbf00'
+                                    : '#57d500',
+                            transition: 'all .3s ease'
+                        }}>
+                            &#x25cf;
             </span> {
-                                row.value //=== 'relationship' ? 'In a relationship'
-                                //: row.value === 'complicated' ? `It's complicated`
-                                //: 'Single'
-                            }
-                        </span>
-                    )
-                }]
-            }, {
-                Header: 'Highest',
-                columns: [{
-                    Header: 'High',
-                    accessor: 'highest',
-                    Cell: row => (
-                        <span>
-                            <span style={{
-                                color: row.value === true ? '#57d500'
-                                    : row.value === false ? '#ff2e00'
-                                        : '#57d500',
-                                transition: 'all .3s ease'
-                            }}>
-                                &#x25cf;
+                            row.value //=== 'relationship' ? 'In a relationship'
+                            //: row.value === 'complicated' ? `It's complicated`
+                            //: 'Single'
+                        }
+                    </span>
+                )
+            }]
+        }, {
+            Header: 'Highest',
+            columns: [{
+                Header: 'High',
+                accessor: 'highest',
+                Cell: row => (
+                    <span>
+                        <span style={{
+                            color: row.value === true ? '#57d500'
+                                : row.value === false ? '#ff2e00'
+                                    : '#57d500',
+                            transition: 'all .3s ease'
+                        }}>
+                            &#x25cf;
             </span>
-                        </span>
-                    )
-                }]
-            }];
-            return columns;
-        }else{
-            var columns = [];
-            return columns;
-        }
+                    </span>
+                )
+            }]
+        }];
+        return columns;
     }
 }
 

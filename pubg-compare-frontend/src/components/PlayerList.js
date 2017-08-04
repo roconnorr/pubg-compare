@@ -3,6 +3,7 @@ import Player from './Player.js';
 import axios from 'axios';
 import update from 'immutability-helper';
 import { RadioGroup, Radio } from 'react-radio-group'
+import jp from 'jsonpath'
 
 const liStyle = {
   float: "left"
@@ -16,7 +17,9 @@ class PlayerList extends React.Component {
       dataInputProps: [],
       highestInputProps: [],
       errorMessages: [],
-      selectedValue: 'Solo'
+      selectedMode: 'solo',
+      asdf: [],
+      statDisplayProps: []
     };
 
     this.onAddButtonClick = this.onAddButtonClick.bind(this);
@@ -38,8 +41,9 @@ class PlayerList extends React.Component {
   }
 
   handleRadioChange(value) {
-    this.setState({selectedValue: value});
-    //use .then to call the update data function
+    this.setState({ selectedMode: value }, () => {
+      this.updateData();
+    });
   }
 
   handlePlayerSearchEvent(event, childId) {
@@ -51,9 +55,9 @@ class PlayerList extends React.Component {
           update(this.state.dataInputProps, {
             [childId]: { $set: response.data }
           })
+        }, () => {
+          this.updateData();
         });
-
-        this.updateData();
       })
       .catch(error => {
         //do the same with error messages
@@ -69,26 +73,57 @@ class PlayerList extends React.Component {
   updateData() {
     if (this.state.dataInputProps !== undefined) {
       var array = this.state.dataInputProps;
+
+      //var stats = [];
+      //var aggregateRegion = [];
+      var selectedStats = [];
+
+      for (var i = 0; i < array.length; i++) {
+        //get all stats objects from current season (TODO: season select)
+        var stats = jp.query(array[i], "$.Stats..[?(@.Season=='2017-pre3')]");
+        //get all agg region objects
+        //TODO: implement region select
+        var aggregateRegion = jp.query(stats, "$..[?(@.Region=='agg')]");
+
+        //select stats based on selectedMode
+        switch(this.state.selectedMode){
+          case 'solo':
+            selectedStats[i] = jp.query(aggregateRegion, "$..[?(@.Match=='solo')].Stats");
+            break;
+          case 'duo':
+            selectedStats[i] = jp.query(aggregateRegion, "$..[?(@.Match=='duo')].Stats");
+            break;
+          case 'squad':
+            selectedStats[i] = jp.query(aggregateRegion, "$..[?(@.Match=='squad')].Stats");
+            break;
+          default:
+            break;
+        }
+      }
+
       var highestArr = [];
 
       //Solo elo compare
-      var res = Math.max.apply(Math, array.map(function (o) { return o.LiveTracking[0].Value; }))
-      var elementPos = array.map(function (x) { return x.LiveTracking[0].Value; }).indexOf(res);
-      highestArr.push({ soloElo: { data: elementPos } });
+      //var res = Math.max.apply(Math, array.map(function (o) { return o.LiveTracking[0].Value; }))
+      //var elementPos = array.map(function (x) { return x.LiveTracking[0].Value; }).indexOf(res);
+      //highestArr.push({ soloElo: { data: elementPos } });
 
       this.setState({ highestInputProps: highestArr });
+      this.setState({ statDisplayProps: selectedStats });
     }
   }
+
+
 
   render() {
     return (
       //when the add button is clicked, call handler and make a new player object
       <div>
         Mode:
-        <RadioGroup name="Mode" selectedValue={this.state.selectedValue} onChange={this.handleRadioChange}>
-          <Radio value="Solo" />Solo
-          <Radio value="Duo" />Duo
-          <Radio value="Squad" />Squad
+        <RadioGroup name="Mode" selectedValue={this.state.selectedMode} onChange={this.handleRadioChange}>
+          <Radio value="solo" />Solo
+          <Radio value="duo" />Duo
+          <Radio value="squad" />Squad
         </RadioGroup>
         <button onClick={this.onAddButtonClick}>Add input</button>
         <div>
@@ -97,7 +132,9 @@ class PlayerList extends React.Component {
               <Player {...input}
                 dataInput={this.state.dataInputProps[input.childId]}
                 errorMsg={this.state.errorMessages[input.childId]}
-                highestInputProps={this.state.highestInputProps} /></li>;
+                highestInputProps={this.state.highestInputProps}
+                mode={this.state.selectedMode}
+                stats={this.state.statDisplayProps[input.childId]} /></li>;
           })}
         </div>
       </div>
