@@ -13,7 +13,8 @@ backend
 
 		api and client need more error handling
 			player not found - done
-			empty search - not done
+			empty search handling - not done
+			too many chars - not done
 
 
 frontend
@@ -42,7 +43,11 @@ frontend
 				error component (player not mound)
 
 	component rethink:
-		playerlist needs to make api calls and compare all the different player data, then pass the data down along with info on which is highest(green) or lowest(red)
+		playerlist needs to make api calls and compare all the different player data, then pass the data down along with info on which is highest(green) or lowest(red) - done
+
+		changing one table ordering should change ordering of all tables
+
+
 
 Data List:
 	Avatar

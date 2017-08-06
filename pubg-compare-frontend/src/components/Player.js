@@ -18,8 +18,6 @@ const divStyle = {
 class Player extends React.Component {
     constructor(props) {
         super(props);
-        //this.state = { data: [] };
-
         this.onSubmit = this.onSubmit.bind(this);
     }
 
@@ -30,10 +28,13 @@ class Player extends React.Component {
 
     render() {
         let table;
-        if (this.props.dataInput == null) {
-            table = null;
-        } else {
+        let message;
+        if (this.props.stats !== undefined) {
             table = <ReactTable data={this.makeTableData()} columns={this.makeColumnData()} />;
+            message = ""
+        }else{
+            table = null;
+            message = "No Data Found"
         }
 
         let error;
@@ -47,6 +48,7 @@ class Player extends React.Component {
                 {this.props.childId}
                 < SearchBox onSubmit={this.onSubmit} />
                 {error}
+                {message}
                 {table}
             </div >
         );
@@ -68,7 +70,7 @@ class Player extends React.Component {
 
     makeColumnData() {
         var columns = [];
-        if (this.props.highestInputProps[0] !== undefined) {
+        if (this.props.highestInput !== undefined) {
             columns = [{
                 Header: 'Stat',
                 columns: [{
@@ -83,7 +85,9 @@ class Player extends React.Component {
                     Cell: row => (
                         <span>
                             <span style={{
-                                color: this.props.highestInputProps[row.index] === this.props.childId ? '#57d500'
+                                color: this.props.highestInput[row.index]
+                                    === this.props.childId ? '#57d500'
+                                    //else
                                     : '#ff2e00',
                                 transition: 'all .3s ease'
                             }}> &#x25cf;

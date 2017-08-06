@@ -14,17 +14,19 @@ class PlayerList extends React.Component {
     super(props);
     this.state = {
       playerList: [],
-      dataInputProps: [],
+      statDisplayProps: [],
       highestInputProps: [],
+      apiResponses: [],
       errorMessages: [],
-      selectedMode: 'solo',
-      statDisplayProps: []
+
+      selectedMode: 'solo'
     };
 
     this.onAddButtonClick = this.onAddButtonClick.bind(this);
     this.handlePlayerSearchEvent = this.handlePlayerSearchEvent.bind(this);
     this.updateData = this.updateData.bind(this);
     this.handleRadioChange = this.handleRadioChange.bind(this);
+    this.findHighestIndex = this.findHighestIndex.bind(this);
   }
 
   onAddButtonClick(event) {
@@ -50,8 +52,8 @@ class PlayerList extends React.Component {
       .then(response => {
         //add response to child index in props array using immutability-helper
         this.setState({
-          dataInputProps:
-          update(this.state.dataInputProps, {
+          apiResponses:
+          update(this.state.apiResponses, {
             [childId]: { $set: response.data }
           })
         }, () => {
@@ -70,11 +72,8 @@ class PlayerList extends React.Component {
   }
 
   updateData() {
-    if (this.state.dataInputProps !== undefined) {
-      var array = this.state.dataInputProps;
-
-      //var stats = [];
-      //var aggregateRegion = [];
+    if (this.state.apiResponses !== undefined) {
+      var array = this.state.apiResponses;
       var selectedStats = [];
 
       for (var i = 0; i < array.length; i++) {
@@ -101,50 +100,45 @@ class PlayerList extends React.Component {
         }
       }
 
-      //calculate highest for each
+      alert(JSON.stringify(selectedStats));
+      //determine the player with the highest value for each statistic
       var highestArr = [];
 
-      //first for loop: loop results (50)
-      //second for loop = keep vars and loop all players, set vars each time to determine highest and add
-      //to highestarr
+      for (var j = 0; j < 50; j++) {
+        //add the returned index to the highest element props array
 
-      //alert(selectedStats[0][0].length);
-
-      for (var j = 0; j < selectedStats[0][0].length; j++) {
-        //Find the max element of all players at the current index
-        var res = Math.max.apply(Math, selectedStats.map(function (o) {
-          if (o[0][j].ValueDec === null) {
-            return o[0][j].ValueInt;
-          } else {
-            return o[0][j].ValueDec;
-          }
-        }));
-
-        //find the index of the highest value
-        var elementPos = selectedStats.map(function (x) {
-          if (x[0][j].ValueDec === null) {
-            return x[0][j].ValueInt;
-          } else {
-            return x[0][j].ValueDec;
-          }
-        }).indexOf(res);
-
-        //add the index to the highest element props array
-        highestArr[j] = elementPos;
+        highestArr[j] = this.findHighestIndex(selectedStats, j)
       }
 
-      //alert(JSON.stringify(selectedStats[0][0][0].value));
-      //Solo elo compare
-      //now working yo - need to check if int or dec is null and decide which one to use
-      //for (var k = 0; k < selectedStats.length; k++) {
-
-      //}
-      //highestArr.push({ soloElo: { data: elementPos } });
-      //alert(res);
-      //alert(elementPos);
-
+      //add the statistic and highest value player data to state
       this.setState({ highestInputProps: highestArr });
       this.setState({ statDisplayProps: selectedStats });
+    }
+  }
+
+  findHighestIndex(inputStats, currentIndex) {
+    //Find the player with max element at the current index
+    if (inputStats[currentIndex] !== undefined) {
+      var res = Math.max.apply(Math, inputStats.map(function (o) {
+        if (o[0][currentIndex].ValueDec === null) {
+          return o[0][currentIndex].ValueInt;
+        } else {
+          return o[0][currentIndex].ValueDec;
+        }
+      }));
+
+      //find the index of the highest value
+      var elementPos = inputStats.map(function (x) {
+        if (x[0][currentIndex].ValueDec === null) {
+          return x[0][currentIndex].ValueInt;
+        } else {
+          return x[0][currentIndex].ValueDec;
+        }
+      }).indexOf(res);
+
+      return elementPos;
+    }else{
+      return -1;
     }
   }
 
@@ -163,11 +157,11 @@ class PlayerList extends React.Component {
           {this.state.playerList.map(input => {
             return <li style={liStyle}>
               <Player {...input}
-                dataInput={this.state.dataInputProps[input.childId]}
-                errorMsg={this.state.errorMessages[input.childId]}
-                highestInputProps={this.state.highestInputProps}
+                stats={this.state.statDisplayProps[input.childId]}
+                highestInput={this.state.highestInputProps}
                 mode={this.state.selectedMode}
-                stats={this.state.statDisplayProps[input.childId]} /></li>;
+                errorMsg={this.state.errorMessages[input.childId]}
+                /></li>;
           })}
         </div>
       </div>
