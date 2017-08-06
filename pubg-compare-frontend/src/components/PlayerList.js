@@ -100,13 +100,11 @@ class PlayerList extends React.Component {
         }
       }
 
-      alert(JSON.stringify(selectedStats));
       //determine the player with the highest value for each statistic
       var highestArr = [];
-
+      //loop all stats in array (50)
       for (var j = 0; j < 50; j++) {
         //add the returned index to the highest element props array
-
         highestArr[j] = this.findHighestIndex(selectedStats, j)
       }
 
@@ -120,25 +118,35 @@ class PlayerList extends React.Component {
     //Find the player with max element at the current index
     if (inputStats[currentIndex] !== undefined) {
       var res = Math.max.apply(Math, inputStats.map(function (o) {
-        if (o[0][currentIndex].ValueDec === null) {
-          return o[0][currentIndex].ValueInt;
-        } else {
-          return o[0][currentIndex].ValueDec;
+        //only check if highest if index exists
+        if (o[0] !== undefined) {
+          //Check if value is stored as int or decimal
+          if (o[0][currentIndex].ValueDec === null) {
+            return o[0][currentIndex].ValueInt;
+          } else {
+            return o[0][currentIndex].ValueDec;
+          }
         }
+        return 0;
       }));
 
       //find the index of the highest value
       var elementPos = inputStats.map(function (x) {
-        if (x[0][currentIndex].ValueDec === null) {
-          return x[0][currentIndex].ValueInt;
-        } else {
-          return x[0][currentIndex].ValueDec;
+        //only check if highest if index exists
+        if (x[0] !== undefined) {
+          //Check if value is stored as int or decimal
+          if (x[0][currentIndex].ValueDec === null) {
+            return x[0][currentIndex].ValueInt;
+          } else {
+            return x[0][currentIndex].ValueDec;
+          }
         }
+        return 0;
       }).indexOf(res);
-
+      
       return elementPos;
-    }else{
-      return -1;
+    } else {
+      return 0;
     }
   }
 

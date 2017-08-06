@@ -30,11 +30,15 @@ class Player extends React.Component {
         let table;
         let message;
         if (this.props.stats !== undefined) {
-            table = <ReactTable data={this.makeTableData()} columns={this.makeColumnData()} />;
-            message = ""
-        }else{
+            if (this.props.stats.length === 0) {
+                table = null;
+                message = "No Data Found";
+            } else {
+                table = <ReactTable data={this.makeTableData()} columns={this.makeColumnData()} />;
+                message = ""
+            }
+        } else {
             table = null;
-            message = "No Data Found"
         }
 
         let error;
@@ -57,7 +61,7 @@ class Player extends React.Component {
     //extracts data from json for the table
     makeTableData() {
         var data = [];
-        if (this.props.stats !== undefined) {
+        if (this.props.stats[0] !== undefined) {
             for (var i = 0; i < this.props.stats[0].length; i++) {
                 data[i] = {
                     "stat": this.props.stats[0][i].label,
@@ -70,7 +74,7 @@ class Player extends React.Component {
 
     makeColumnData() {
         var columns = [];
-        if (this.props.highestInput !== undefined) {
+        if (this.props.highestInput[0] !== undefined) {
             columns = [{
                 Header: 'Stat',
                 columns: [{
