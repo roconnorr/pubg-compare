@@ -85,7 +85,7 @@ class PlayerList extends React.Component {
         var aggregateRegion = jp.query(stats, "$..[?(@.Region=='agg')]");
 
         //select stats based on selectedMode
-        switch(this.state.selectedMode){
+        switch (this.state.selectedMode) {
           case 'solo':
             selectedStats[i] = jp.query(aggregateRegion, "$..[?(@.Match=='solo')].Stats");
             break;
@@ -101,12 +101,47 @@ class PlayerList extends React.Component {
         }
       }
 
+      //calculate highest for each
       var highestArr = [];
 
+      //first for loop: loop results (50)
+      //second for loop = keep vars and loop all players, set vars each time to determine highest and add
+      //to highestarr
+
+      //alert(selectedStats[0][0].length);
+
+      for (var j = 0; j < selectedStats[0][0].length; j++) {
+        //Find the max element of all players at the current index
+        var res = Math.max.apply(Math, selectedStats.map(function (o) {
+          if (o[0][j].ValueDec === null) {
+            return o[0][j].ValueInt;
+          } else {
+            return o[0][j].ValueDec;
+          }
+        }));
+
+        //find the index of the highest value
+        var elementPos = selectedStats.map(function (x) {
+          if (x[0][j].ValueDec === null) {
+            return x[0][j].ValueInt;
+          } else {
+            return x[0][j].ValueDec;
+          }
+        }).indexOf(res);
+
+        //add the index to the highest element props array
+        highestArr[j] = elementPos;
+      }
+
+      //alert(JSON.stringify(selectedStats[0][0][0].value));
       //Solo elo compare
-      //var res = Math.max.apply(Math, array.map(function (o) { return o.LiveTracking[0].Value; }))
-      //var elementPos = array.map(function (x) { return x.LiveTracking[0].Value; }).indexOf(res);
+      //now working yo - need to check if int or dec is null and decide which one to use
+      //for (var k = 0; k < selectedStats.length; k++) {
+
+      //}
       //highestArr.push({ soloElo: { data: elementPos } });
+      //alert(res);
+      //alert(elementPos);
 
       this.setState({ highestInputProps: highestArr });
       this.setState({ statDisplayProps: selectedStats });
