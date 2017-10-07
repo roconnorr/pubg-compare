@@ -29,6 +29,10 @@ class PlayerList extends React.Component {
     this.findHighestIndex = this.findHighestIndex.bind(this);
   }
 
+  componentDidMount(){
+    this.onAddButtonClick();
+  }
+
   onAddButtonClick(event) {
     const playerList = this.state.playerList;
     //Add a props object for a new player component to the list
@@ -153,14 +157,13 @@ class PlayerList extends React.Component {
   render() {
     return (
       //when the add button is clicked, call handler and make a new player object
-      <div>
-        Mode:
+      <div> Mode:
         <RadioGroup name="Mode" selectedValue={this.state.selectedMode} onChange={this.handleRadioChange}>
           <Radio value="solo" />Solo
           <Radio value="duo" />Duo
           <Radio value="squad" />Squad
         </RadioGroup>
-        <button onClick={this.onAddButtonClick}>Add input</button>
+        <button onClick={this.onAddButtonClick}>Add player</button>
         <div>
           {this.state.playerList.map(input => {
             return <li style={liStyle}>

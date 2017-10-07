@@ -4,13 +4,13 @@
   "private": true,
   "dependencies": {
     "axios": "^0.16.2",
-    "immutability-helper": "^2.3.0",
+    "immutability-helper": "^2.4.0",
     "jsonpath": "^0.2.12",
-    "react": "^15.6.1",
-    "react-dom": "^15.6.1",
+    "react": "^16.0.0",
+    "react-dom": "^16.0.0",
     "react-radio-group": "^3.0.2",
-    "react-scripts": "1.0.10",
-    "react-table": "^6.5.1"
+    "react-scripts": "1.0.14",
+    "react-table": "^6.6.0"
   },
   "scripts": {
     "start": "react-scripts start",

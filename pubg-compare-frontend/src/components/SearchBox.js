@@ -28,15 +28,14 @@ class SearchBox extends React.Component {
         return (
             <form onSubmit={this.onSubmit}>
                 <label>
-                    Player Name:
                     <input
                         // use value and onChange so it will be a controlled component
                         value={this.state.value}
                         onChange={this.onInput}
                         type="text"
-                        placeholder="Type your text here" />
+                        placeholder="Enter player name" />
                 </label>
-                <button type="submit">Add to list</button>
+                <button type="submit">Search</button>
             </form>
         );
     }

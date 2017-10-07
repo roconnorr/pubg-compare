@@ -49,7 +49,6 @@ class Player extends React.Component {
         }
         return (
             <div style={divStyle} >
-                {this.props.childId}
                 < SearchBox onSubmit={this.onSubmit} />
                 {error}
                 {message}
