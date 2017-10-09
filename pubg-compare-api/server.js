@@ -12,15 +12,15 @@ var fileApiKey = fs.readFileSync('KEYDATA', 'utf8');
 var port = process.env.PORT || 3001;
 
 //pubg api constant
-const {PubgAPI, PubgAPIErrors} = require('pubg-api-redis');
+const {PubgAPI, PubgAPIErrors, REGION, SEASON, MATCH} = require('pubg-api-redis');
 
 // pubg api redis cache config
 const api = new PubgAPI({
     apikey: fileApiKey,
-    redisConfig: {
-        host: '127.0.0.1',
-        port: 6379,
-    },
+    // redisConfig: {
+    //     host: '127.0.0.1',
+    //     port: 6379,
+    // },
 });
 
 // configure app to use bodyParser()
@@ -32,19 +32,20 @@ app.use(cors())
 var router = express.Router();
 
 // middleware to use for all requests
-//router.use(function(req, res, next) {
-//    // do logging
-//    console.log('Something is happening.');
-//    next(); // make sure we go to the next routes and don't stop here
-//});
+router.use(function(req, res, next) {
+   // do logging
+   //console.log('Something is happening.');
+   next(); // make sure we go to the next routes and don't stop here
+});
 
 
 router.route('/playername/:player_name')
 
     // get the player with that pubg name
     .get(function (req, res) {
-        api.profile.byNickname(req.params.player_name)
+        api.getProfileByNickname(req.params.player_name)
             .then((data) => { 
+                //console.log(JSON.stringify(data));
                 res.json(data);
             })
             .catch(error => {
@@ -56,7 +57,7 @@ router.route('/steamid/:steam_id')
 
     // get the player with that steam id
     .get(function (req, res) {
-        api.profile.bySteamId(req.params.steam_id)
+        api.getAccountBySteamId(req.params.steam_id)
             .then((data) => {
                 res.json(data);
             });

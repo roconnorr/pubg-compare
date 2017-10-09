@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 //import logo from './logo.svg';
-import pubglogo from './pubg-logo-3.png';
+import pubglogo from './pubg-logo.jpg';
 import './App.css';
 //import Player from './components/Player.js';
 import PlayerList from './components/PlayerList.js';
