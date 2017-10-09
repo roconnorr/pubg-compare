@@ -38,6 +38,94 @@ router.use(function(req, res, next) {
    next(); // make sure we go to the next routes and don't stop here
 });
 
+router.route('/region/:region/season/:season/mode/:mode/playername/:player_name')
+
+    // get the player with that pubg name
+    .get(function (req, res) {
+        var region = REGION.ALL;
+        var season = SEASON.EA2017pre4;
+        var match = MATCH.DEFAULT;
+        switch(req.params.region){
+            case 'agg':
+                region = REGION.ALL;
+                break;
+            case 'as':
+                region = REGION.AS;
+                break;
+            case 'eu':
+                region = REGION.EU;
+                break;
+            case 'na':
+                region = REGION.NA;
+                break;
+            case 'oc':
+                region = REGION.OC;
+                break;
+            case 'sa':
+                region = REGION.SA;
+                break;
+            case 'sea':
+                region = REGION.SEA;
+                break;
+            default:
+                break;
+        }
+
+        switch(req.params.season){
+            case '2017-pre1':
+                season = SEASON.EA2017pre1;
+                break;
+            case '2017-pre2':
+                season = SEASON.EA2017pre2;
+                break;
+            case '2017-pre3':
+                season = SEASON.EA2017pre3;
+                break;
+            case '2017-pre4':
+                season = SEASON.EA2017pre4;
+                break;
+            default:
+                break;
+        }
+
+        switch(req.params.mode){
+            case 'solo':
+                match = MATCH.SOLO;
+                break;
+            case 'solo-fpp':
+                match = MATCH.SOLOFPP;
+                break;
+            case 'duo':
+                match = MATCH.DUO;
+                break;
+            case 'duo-fpp':
+                match = MATCH.DUOFPP;
+                break;
+            case 'squad':
+                match = MATCH.SQUAD;
+                break;
+            case 'squad-fpp':
+                match = MATCH.SQUADFPP;
+                break;
+            default:
+                break;
+        }
+
+        api.getProfileByNickname(req.params.player_name)
+            .then((profile) => { 
+                //console.log(JSON.stringify(data));
+                const stats = profile.getStats({
+                    region: region,
+                    season: season, // defaults to profile.content.defaultSeason
+                    match: match // defaults to SOLO
+                })
+                res.json(stats);
+            })
+            .catch(error => {
+                res.status(404).json({message: "Player not found"});
+            });
+    });
+
 
 router.route('/playername/:player_name')
 
