@@ -46,3 +46,4 @@ chrome-user-data
 !src/node_modules
 KEYDATA
 20170726203916_1.jpg
+.eslintrc.json

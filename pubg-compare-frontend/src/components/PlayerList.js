@@ -1,16 +1,23 @@
-import React from 'react';
-import Player from './Player.js';
-import axios from 'axios';
-import update from 'immutability-helper';
-import {
-  RadioGroup,
-  Radio
-} from 'react-radio-group'
+import React from "react";
+import Player from "./Player.js";
+import axios from "axios";
+import update from "immutability-helper";
+// import Dropdown from 'react-dropdown'
 import jp from 'jsonpath'
 
 const liStyle = {
   float: "left"
 };
+
+// const divStyle = {
+//   display: "inline"
+// };
+
+// const containerStyle = {
+//   display: "flex", 
+//   flexdirection: "row",
+//   width: "100%"
+// };
 
 class PlayerList extends React.Component {
   constructor(props) {
@@ -20,26 +27,19 @@ class PlayerList extends React.Component {
       statDisplayProps: [],
       highestInputProps: [],
       apiResponses: [],
-      errorMessages: [],
-
-      selectedMode: 'solo',
-      selectedRegion: 'agg',
-      selectedSeason: '2017-pre4'
+      errorMessages: []
     };
 
     this.onAddButtonClick = this.onAddButtonClick.bind(this);
     this.handlePlayerSearchEvent = this.handlePlayerSearchEvent.bind(this);
     this.updateData = this.updateData.bind(this);
     this.findHighestIndex = this.findHighestIndex.bind(this);
-
-    this.handleSeasonChange = this.handleSeasonChange.bind(this);
-    this.handleRegionChange = this.handleRegionChange.bind(this);
-    this.handleModeChange = this.handleModeChange.bind(this);
   }
 
   componentDidMount() {
     this.onAddButtonClick();
   }
+
 
   onAddButtonClick(event) {
     const playerList = this.state.playerList;
@@ -53,33 +53,9 @@ class PlayerList extends React.Component {
     });
   }
 
-  handleSeasonChange(value) {
-    this.setState({
-      selectedSeason: value
-    }, () => {
-      this.updateData();
-    });
-  }
-
-  handleRegionChange(value) {
-    this.setState({
-      selectedRegion: value
-    }, () => {
-      this.updateData();
-    });
-  }
-
-  handleModeChange(value) {
-    this.setState({
-      selectedMode: value
-    }, () => {
-      this.updateData();
-    });
-  }
-
   handlePlayerSearchEvent(event, childId) {
-    //axios.get(`http://128.199.132.142:3001/api/playername/${event}`)
-    axios.get(`http://localhost:3001/api/playername/${event}`)
+    axios.get(`http://128.199.132.142:3001/api/playername/${event}`)
+    //axios.get(`http://localhost:3001/api/playername/${event}`)
       .then(response => {
         //add response to child index in props array using immutability-helper
         this.setState({
@@ -106,21 +82,21 @@ class PlayerList extends React.Component {
 
   updateData() {
     if (this.state.apiResponses !== undefined) {
-      var array = this.state.apiResponses;
+      var responseArray = this.state.apiResponses;
       var selectedStats = [];
 
-      for (var i = 0; i < array.length; i++) {
+      for (var i = 0; i < responseArray.length; i++) {
         //get all stats objects from selected season
         var stats = [];
-        switch (this.state.selectedSeason) {
+        switch (this.props.selectedSeason) {
           case '2017-pre4':
-            stats = jp.query(array[i], "$.stats..[?(@.Season=='2017-pre4')]");
+            stats = jp.query(responseArray[i], "$.stats..[?(@.Season=='2017-pre4')]");
             break;
           case '2017-pre3':
-            stats = jp.query(array[i], "$.stats..[?(@.Season=='2017-pre3')]");
+            stats = jp.query(responseArray[i], "$.stats..[?(@.Season=='2017-pre3')]");
             break;
           case '2017-pre2':
-            stats = jp.query(array[i], "$.stats..[?(@.Season=='2017-pre2')]");
+            stats = jp.query(responseArray[i], "$.stats..[?(@.Season=='2017-pre2')]");
             break;
           default:
             break;
@@ -128,22 +104,34 @@ class PlayerList extends React.Component {
 
         //get all selected region objects
         var aggregateRegion = [];
-        switch (this.state.selectedRegion) {
+        switch (this.props.selectedRegion) {
           case 'agg':
             aggregateRegion = jp.query(stats, "$..[?(@.Region=='agg')]");
+            break;
+          case 'as':
+            aggregateRegion = jp.query(stats, "$..[?(@.Region=='as')]");
+            break;
+          case 'eu':
+            aggregateRegion = jp.query(stats, "$..[?(@.Region=='eu')]");
+            break;
+          case 'na':
+            aggregateRegion = jp.query(stats, "$..[?(@.Region=='na')]");
             break;
           case 'oc':
             aggregateRegion = jp.query(stats, "$..[?(@.Region=='oc')]");
             break;
-          case 'as':
-            aggregateRegion = jp.query(stats, "$..[?(@.Region=='as')]");
+          case 'sa':
+            aggregateRegion = jp.query(stats, "$..[?(@.Region=='sa')]");
+            break;
+          case 'sea':
+            aggregateRegion = jp.query(stats, "$..[?(@.Region=='sea')]");
             break;
           default:
             break;
         }
 
         //select stats based on selectedMode
-        switch (this.state.selectedMode) {
+        switch (this.props.selectedMode) {
           case 'solo':
             selectedStats[i] = jp.query(aggregateRegion, "$..[?(@.Match=='solo')].Stats");
             break;
@@ -152,6 +140,15 @@ class PlayerList extends React.Component {
             break;
           case 'squad':
             selectedStats[i] = jp.query(aggregateRegion, "$..[?(@.Match=='squad')].Stats");
+            break;
+          case 'solo-fpp':
+            selectedStats[i] = jp.query(aggregateRegion, "$..[?(@.Match=='solo-fpp')].Stats");
+            break;
+          case 'duo-fpp':
+            selectedStats[i] = jp.query(aggregateRegion, "$..[?(@.Match=='duo-fpp')].Stats");
+            break;
+          case 'squad-fpp':
+            selectedStats[i] = jp.query(aggregateRegion, "$..[?(@.Match=='squad-fpp')].Stats");
             break;
           default:
             alert("unknown mode");
@@ -217,28 +214,7 @@ class PlayerList extends React.Component {
     return (
       //when the add button is clicked, call handler and make a new player object
       <div>
-        Season:
-        <RadioGroup name = "Season" selectedValue = {this.state.selectedSeason} onChange = {this.handleSeasonChange} >
-          <Radio value = "2017-pre4" />2017 - pre4 
-          <Radio value = "2017-pre3" />2017 - pre3 
-          <Radio value = "2017-pre2" />2017 - pre2 
-        </RadioGroup>
-
-        Region:
-        <RadioGroup name = "Region" selectedValue = {this.state.selectedRegion} onChange = {this.handleRegionChange} >
-          <Radio value = "agg" /> Aggregate 
-          <Radio value = "oc" /> OCE 
-          <Radio value = "as" /> Asia 
-        </RadioGroup>
-        
-        Mode:
-        <RadioGroup name = "Mode" selectedValue = {this.state.selectedMode} onChange = {this.handleModeChange}>
-          <Radio value = "solo" /> Solo 
-          <Radio value = "duo" /> Duo 
-          <Radio value = "squad" /> Squad 
-        </RadioGroup> 
-      
-      <button onClick = {this.onAddButtonClick}> Add player </button> 
+        <button onClick = {this.onAddButtonClick}> Add player </button> 
         <div>
           {this.state.playerList.map(input => {
             return <li style={liStyle}>
@@ -250,7 +226,7 @@ class PlayerList extends React.Component {
                 /></li>;
           })}
         </div>
-      </div>
+        </div>
     );
   }
 }
