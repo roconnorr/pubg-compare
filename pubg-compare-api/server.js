@@ -4,6 +4,7 @@ var app = express();
 var bodyParser = require('body-parser');
 var cors = require('cors');
 var fs = require('fs');
+var RateLimit = require('express-rate-limit');
 
 //read api key from KEYDATA file
 var fileApiKey = fs.readFileSync('KEYDATA', 'utf8');
@@ -22,6 +23,15 @@ const api = new PubgAPI({
         port: 6379,
     },
 });
+
+var limiter = new RateLimit({
+    windowMs: 8*60*1000, // 8 minutes 
+    max: 100, // limit each IP to 100 requests per windowMs 
+    delayMs: 0 // disable delaying - full speed until the max limit is reached 
+});
+
+//  apply to all requests 
+app.use(limiter);
 
 // configure app to use bodyParser()
 // this will let us get the data from a POST
