@@ -1,9 +1,7 @@
-import React from 'react';
-import SearchBox from './SearchBox.js';
-
-//import react table and style
-import ReactTable from 'react-table'
-import 'react-table/react-table.css'
+import React from "react";
+import SearchBox from "./SearchBox.js"; // eslint-disable-line no-unused-vars
+import ReactTable from "react-table"; // eslint-disable-line no-unused-vars
+import "react-table/react-table.css";
 
 const divStyle = {
     width: 350,
@@ -35,7 +33,7 @@ class Player extends React.Component {
                 message = "No Data Found";
             } else {
                 table = <ReactTable data={this.makeTableData()} columns={this.makeColumnData()} />;
-                message = ""
+                message = "";
             }
         } else {
             table = null;
@@ -75,26 +73,26 @@ class Player extends React.Component {
         var columns = [];
         if (this.props.highestInput[0] !== undefined) {
             columns = [{
-                Header: 'Stat',
+                Header: "Stat",
                 columns: [{
-                    Header: 'Stat',
-                    accessor: 'stat'
+                    Header: "Stat",
+                    accessor: "stat"
                 }]
             }, {
-                Header: 'Value',
+                Header: "Value",
                 columns: [{
-                    Header: 'Value',
-                    accessor: 'value',
+                    Header: "Value",
+                    accessor: "value",
                     Cell: row => (
                         <span>
                             <span style={{
                                 color: this.props.highestInput[row.index]
-                                    === this.props.childId ? '#57d500'
+                                    === this.props.childId ? "#57d500"
                                     //else
-                                    : '#ff2e00',
-                                transition: 'all .3s ease'
+                                    : "#ff2e00",
+                                transition: "all .3s ease"
                             }}> &#x25cf;
-                        </span> {
+                            </span> {
                                 row.value
                             }
                         </span>
@@ -105,6 +103,5 @@ class Player extends React.Component {
         return columns;
     }
 }
-
 export default Player;
 
