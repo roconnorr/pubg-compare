@@ -2,10 +2,10 @@
 React web app for comparing the statistics of multiple pubg players using https://pubgtracker.com/site-api 
  
 View a Live Version of the site at: http://www.pubg-com.me/
- 
-If the live site is returning player not found for any player, check the status of the api at 
-pubgtracker.com. It might currently be disabled.
 
 # Info
 Work in progress. Start redis and then run server.js for the api wrapper. See inside pubg-compare-frontend for info on 
 running the React app.
+
+If the live site is returning player not found for any player, check the status of the api at 
+pubgtracker.com. It might currently be disabled.
