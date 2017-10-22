@@ -30,7 +30,7 @@ class OptionsBox extends React.Component {
         this.state = {
             selectedMode: { value: "solo", label: "Solo"},
             selectedRegion: { value: "agg", label: "Aggregate"},
-            selectedSeason: { value: "2017-pre4", label: "2017-pre4"}
+            selectedSeason: { value: "2017-pre5", label: "2017-pre5"}
         };
 
         this.handleSeasonChange = this.handleSeasonChange.bind(this);
@@ -77,6 +77,7 @@ class OptionsBox extends React.Component {
         const regionDefault = this.state.selectedRegion;
         
         const seasonOptions = [
+            { value: "2017-pre5", label: "2017-pre5" },
             { value: "2017-pre4", label: "2017-pre4" },
             { value: "2017-pre3", label: "2017-pre3" },
             { value: "2017-pre2", label: "2017-pre2" },
