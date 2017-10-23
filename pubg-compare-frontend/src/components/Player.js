@@ -2,6 +2,7 @@ import React from "react";
 import SearchBox from "./SearchBox.js"; // eslint-disable-line no-unused-vars
 import ReactTable from "react-table"; // eslint-disable-line no-unused-vars
 import "react-table/react-table.css";
+import { BarLoader } from "react-spinners"; // eslint-disable-line no-unused-vars
 
 const divStyle = {
     width: 350,
@@ -10,6 +11,12 @@ const divStyle = {
     borderStyle: "solid",
     background: "#eee",
     padding: "20px",
+};
+
+const loaderStyle = {
+    margin: "auto",
+    padding: "20px",
+    width: "35%"
 };
 
 //props: playername, 
@@ -39,6 +46,13 @@ class Player extends React.Component {
             table = null;
         }
 
+        let loading;
+        if (this.props.loading === false) {
+            loading = "";
+        } else {
+            loading = <div style={loaderStyle}>< BarLoader loading={this.props.loading} color={"#4786bb"} /></div>;
+        }
+
         let error;
         if (this.props.errorMsg === "") {
             error = "";
@@ -48,6 +62,7 @@ class Player extends React.Component {
         return (
             <div style={divStyle} >
                 < SearchBox onSubmit={this.onSubmit} />
+                {loading}
                 {error}
                 {message}
                 {table}

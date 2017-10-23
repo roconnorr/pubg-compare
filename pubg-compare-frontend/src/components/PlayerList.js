@@ -17,7 +17,8 @@ class PlayerList extends React.Component {
             statDisplayProps: [],
             highestInputProps: [],
             apiResponses: [],
-            errorMessages: []
+            errorMessages: [],
+            loading: []
         };
 
         this.onAddButtonClick = this.onAddButtonClick.bind(this);
@@ -41,9 +42,25 @@ class PlayerList extends React.Component {
                 handlePlayerSearchEvent: this.handlePlayerSearchEvent
             })
         });
+        //set initial loading state to false
+        this.setState({
+            loading: Update(this.state.loading, {
+                [playerList.length]: {
+                    $set: false
+                }
+            })
+        });
     }
 
     handlePlayerSearchEvent(event, childId) {
+        //set loading state to true for childid
+        this.setState({
+            loading: Update(this.state.loading, {
+                [childId]: {
+                    $set: true
+                }
+            })
+        });
         Axios.get(`http://128.199.132.142:3001/api/playername/${event}`)
         //axios.get(`http://localhost:3001/api/playername/${event}`)
             .then(response => {
@@ -56,6 +73,13 @@ class PlayerList extends React.Component {
                     })
                 }, () => {
                     this.updateData();
+                    this.setState({
+                        loading: Update(this.state.loading, {
+                            [childId]: {
+                                $set: false
+                            }
+                        })
+                    });
                 });
             })
             .catch(error => {
@@ -64,6 +88,14 @@ class PlayerList extends React.Component {
                     errorMessages: Update(this.state.errorMessages, {
                         [childId]: {
                             $set: error.response.data.message
+                        }
+                    })
+                });
+                //set loading state to false
+                this.setState({
+                    loading: Update(this.state.loading, {
+                        [childId]: {
+                            $set: false
                         }
                     })
                 });
@@ -153,11 +185,13 @@ class PlayerList extends React.Component {
             <div>
                 <button onClick={this.onAddButtonClick} > Add player </button> 
                 <div> 
+                    
                     {this.state.playerList.map((input, index) => {
                         return <li key={index} style={liStyle} ><Player { ...input}
                             stats={this.state.statDisplayProps[input.childId]}
                             highestInput={this.state.highestInputProps}
                             mode={this.state.selectedMode}
+                            loading={this.state.loading[input.childId]}
                             errorMsg={this.state.errorMessages[input.childId]}/>
                         </li >;
                     })} 
