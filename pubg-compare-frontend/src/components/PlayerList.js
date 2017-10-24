@@ -61,6 +61,14 @@ class PlayerList extends React.Component {
                 }
             })
         });
+        //clear error message
+        this.setState({
+            errorMessages: Update(this.state.errorMessages, {
+                [childId]: {
+                    $set: ""
+                }
+            })
+        });
         Axios.get(`http://128.199.132.142:3001/api/playername/${event}`)
         //axios.get(`http://localhost:3001/api/playername/${event}`)
             .then(response => {

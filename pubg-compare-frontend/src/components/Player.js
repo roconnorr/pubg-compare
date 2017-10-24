@@ -37,13 +37,14 @@ class Player extends React.Component {
         if (this.props.stats !== undefined) {
             if (this.props.stats.length === 0) {
                 table = null;
-                message = "No Data Found";
+                message = "No Data Found, Have you played any games in this Season/Region/Mode?";
             } else {
                 table = <ReactTable data={this.makeTableData()} columns={this.makeColumnData()} />;
                 message = "";
             }
         } else {
             table = null;
+            message = "";
         }
 
         let loading;
@@ -58,13 +59,17 @@ class Player extends React.Component {
             error = "";
         } else {
             error = this.props.errorMsg;
+            message = "";
+            table = null;
         }
         return (
             <div style={divStyle} >
                 < SearchBox onSubmit={this.onSubmit} />
                 {loading}
-                {error}
-                {message}
+                <p>
+                    {error}
+                    {message}
+                </p>
                 {table}
             </div >
         );
