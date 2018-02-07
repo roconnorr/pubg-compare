@@ -9,3 +9,7 @@ running the React app.
 
 If the live site is returning player not found for any player, check the status of the api at 
 pubgtracker.com. It might currently be disabled.
+
+Current Status:
+
+"Api is disabled due to throttling we are getting from Bluehole.  Please do not contact us, we will re-enable the API as soon as it's possible. We're sorry for any trouble this has caused, but it's outside of our control."
